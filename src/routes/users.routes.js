@@ -5,7 +5,7 @@ const { Auth } = require("../middlewares/auth.middlewares");
 const router = express.Router();
 
 //get requests
-router.get("/", [Auth], UserController.getAllUsers);
+router.get("/",[Auth], UserController.getAllUsers);
 router.get("/own", [Auth], UserController.getCurrentUser);
 
 

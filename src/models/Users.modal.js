@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const Hasher = require("../helpers/Hasher.helper");
+const mongoosePaginate = require("mongoose-paginate-v2");
+
 const {
   JWT_SECRET,
   JWT_EXPIRY,
@@ -47,6 +49,8 @@ const Schema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+Schema.plugin(mongoosePaginate);
 
 Schema.pre("save", async function (next) {
   let user = this;

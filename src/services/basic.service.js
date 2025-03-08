@@ -4,6 +4,9 @@ class BasicServices {
   constructor(modal) {
     this.modal = modal;
   }
+  paginate = (filter, options) => {
+    return this.modal.paginate(filter, options);
+  };
   create = (body) => {
     return this.modal.create({ ...body });
   };

@@ -2,6 +2,8 @@ const HasherHelper = require("../helpers/Hasher.helper");
 const HttpError = require("../helpers/HttpError.helpers");
 const Response = require("../helpers/Response.helpers");
 const { UserService } = require("../services/user.service");
+const { JWT_EMAIL_VERIFY_SECRET } = process.env;
+const createQueryHelper = require("../helpers/Query.helper");
 const passport = require("passport");
 require("../passport/auth");
 
@@ -107,9 +109,16 @@ class UserController {
     Response(res).body(userData).send();
   };
   getAllUsers = async (req, res) => {
-    const user = await UserService.find({
-      _id: { $nin: [req.user._id] },
-    }).sort({ createdAt: -1 });
+    const { filter, options } = createQueryHelper(req.query, {
+      searchFields: ["name"],
+      unFilter: [],
+      customFilters: (filter, query) => {
+        // if (req.user.role === "ADMIN")
+        filter._id = { $nin: [req.user._id] };
+      },
+      customPopulate: [{}],
+    });
+    const user = await UserService.paginate(filter, options);
     Response(res).body(user).send();
   };
   getUserDetails = async (req, res) => {
